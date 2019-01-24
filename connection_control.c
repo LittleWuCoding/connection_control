@@ -100,49 +100,49 @@ login_refuse_checks(Port *port, int status)
 	switch(port->hba->auth_method)
 	{
 		case uaReject:
-			elog(LOG,"auth_method is uaReject");
+			elog(DEBUG1,"auth_method is uaReject");
 			break;
 		case uaImplicitReject:
-			elog(LOG,"auth_method is uaImplicitReject");
+			elog(DEBUG1,"auth_method is uaImplicitReject");
 			break;
 		case uaTrust:
-			elog(LOG,"auth_method is uaTrust");
+			elog(DEBUG1,"auth_method is uaTrust");
 			break;
 		case uaIdent:
-			elog(LOG,"auth_method is uaIdent");
+			elog(DEBUG1,"auth_method is uaIdent");
 			break;
 		case uaPassword:
-			elog(LOG,"auth_method is uaPassword");
+			elog(DEBUG1,"auth_method is uaPassword");
 			break;
 		case uaMD5:
-			elog(LOG,"auth_method is uaMD5");
+			elog(DEBUG1,"auth_method is uaMD5");
 			break;
 		case uaSCRAM:
-			elog(LOG,"auth_method is uaSCRAM");
+			elog(debug1,"auth_method is uaSCRAM");
 			break;
 		case uaGSS:
-			elog(LOG,"auth_method is uaGSS");
+			elog(DEBUG1,"auth_method is uaGSS");
 			break;
 		case uaSSPI:
-			elog(LOG,"auth_method is uaSSPI");
+			elog(DEBUG1,"auth_method is uaSSPI");
 			break;
 		case uaPAM:
-			elog(LOG,"auth_method is uaPAM");
+			elog(DEBUG1,"auth_method is uaPAM");
 			break;
 		case uaBSD:
-			elog(LOG,"auth_method is uaBSD");
+			elog(DEBUG1,"auth_method is uaBSD");
 			break;
 		case uaLDAP:
-			elog(LOG,"auth_method is uaLDAP");
+			elog(DEBUG1,"auth_method is uaLDAP");
 			break;
 		case uaCert:
-			elog(LOG,"auth_method is uaCert");
+			elog(DEBUG1,"auth_method is uaCert");
 			break;
 		case uaRADIUS:
-			elog(LOG,"auth_method is uaRADIUS");
+			elog(DEBUG1,"auth_method is uaRADIUS");
 			break;
 		case uaPeer:
-			elog(LOG,"auth_method is uaPeer");
+			elog(DEBUG1,"auth_method is uaPeer");
 			break;
 		default:
 			break;
@@ -151,19 +151,19 @@ login_refuse_checks(Port *port, int status)
 	switch(status)
 	{
 		case STATUS_OK:
-			elog(LOG,"status is STATUS_OK");
+			elog(DEBUG1,"status is STATUS_OK");
 			break;
 		case STATUS_ERROR:
-			elog(LOG,"status is STATUS_ERROR");
+			elog(DEBUG1,"status is STATUS_ERROR");
 			break;
 		case STATUS_EOF:
-			elog(LOG,"status is STATUS_EOF");
+			elog(DEBUG1,"status is STATUS_EOF");
 			break;
 		case STATUS_FOUND:
-			elog(LOG,"status is STATUS_FOUND");
+			elog(DEBUG1,"status is STATUS_FOUND");
 			break;
 		case STATUS_WAITING:
-			elog(LOG,"status is STATUS_WAITING");
+			elog(DEBUG1,"status is STATUS_WAITING");
 			break;
 		default:
 			break;
@@ -176,7 +176,7 @@ login_refuse_checks(Port *port, int status)
 	
 	create_and_lock_record_file();
 
-	elog(LOG,"login_refuse_minutes is %d", login_refuse_minutes);
+	elog(DEBUG1,"login_refuse_minutes is %d", login_refuse_minutes);
 
 	
 	if (user_exist(port->user_name))
@@ -185,7 +185,7 @@ login_refuse_checks(Port *port, int status)
 		{
 			if (failed_time_interval(port->user_name) < login_refuse_minutes * 60)
 			{
-				elog(LOG,"this connection should be refused!");
+				elog(DEBUG1,"this connection should be refused!");
 				free(full_path);
 				unlock_record_file();
 				free(lock_path);
@@ -196,7 +196,6 @@ login_refuse_checks(Port *port, int status)
 			}
 			else
 			{
-				elog(LOG,"222");
 				remove_user(port->user_name);
 			}
 		}
@@ -204,10 +203,8 @@ login_refuse_checks(Port *port, int status)
 		{
 			if (failed_time_interval(port->user_name) > login_refuse_minutes * 60)
 			{
-				elog(LOG,"233");
 				remove_user(port->user_name);
 			}
-			elog(LOG,"234");
 		}
 	}
 	 
@@ -216,25 +213,21 @@ login_refuse_checks(Port *port, int status)
 
 		if (!user_exist(port->user_name))
 		{
-			elog(LOG,"333");
 			insert_user(port->user_name, 1, time(NULL));
 
 		}
 		else
 		{
-			elog(LOG,"444");
 			increase_failed_count(port->user_name); // update failed_time also
 		}
 	}
 	else
 	{
-		elog(LOG,"445");
 		if (user_exist(port->user_name))
 		{
 			remove_user(port->user_name);
 		}		
 	}
-	elog(LOG,"555");
 	free(full_path);
 	unlock_record_file();
 	free(lock_path);
@@ -312,8 +305,6 @@ create_and_lock_record_file(void)
 	{
 		elog(ERROR,"Can not create lock file");
 	}
-	
-	//elog(LOG,"LINUX!!!!");
 }
 
 /*
