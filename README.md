@@ -7,11 +7,11 @@ At present we can determine refuse the connection for login failed for special t
 connection from this username for how long time.
 
 We have two parameters:
-
+```
 connection_control.minutes  //minutes to refuse users login
 
 connection_control.threshold //failed times before refuse users login
-
+```
 It is easy to understand the two parameter without explanation.
 
 The installation of the  plugin is just like common postgres contribs. Which are :
@@ -23,6 +23,7 @@ The installation of the  plugin is just like common postgres contribs. Which are
 make && make install
 ```
 4. modified your postgresql.conf and restart your DB
+
 5.psql into the server and run 
 ```
 create extension connection_control;
