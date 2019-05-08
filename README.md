@@ -24,7 +24,7 @@ make && make install
 ```
 4. modified your postgresql.conf and restart your DB
 
-5.psql into the server and run 
+5. psql into the server and run 
 ```
 create extension connection_control;
 ```
